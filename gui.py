@@ -5,8 +5,10 @@ from PyQt5.QtCore import Qt
 from excel import excel_write_test, read_cell, delete_cell
 # from PyQt5.QtGui import QIcon
 
-cell_var = "A2"
+cell_var = "B2"
 calorie_goal = 1600
+
+
 class CalorieTrackerGUI(QMainWindow):
 
     def __init__(self):
@@ -32,7 +34,6 @@ class CalorieTrackerGUI(QMainWindow):
 
         self.reset_button = QPushButton("Reset Calories")
         self.reset_button.clicked.connect(self.reset)
-
 
         # grid; button placement
         row = 0

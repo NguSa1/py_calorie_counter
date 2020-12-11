@@ -1,10 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from gui import CalorieTrackerGUI
+from excel import excel_exist
 
 
 def main():
-    # run_tmtc_client(False)
+
+    excel_exist()
     app = QApplication([])
     gui = CalorieTrackerGUI()
     sys.exit(app.exec_())
