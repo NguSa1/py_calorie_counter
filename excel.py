@@ -1,5 +1,6 @@
 from openpyxl import Workbook, load_workbook
 import datetime
+from globals import update_global, get_global
 
 
 def excel_exist():
@@ -21,18 +22,24 @@ def excel_exist():
 def excel_write_test(calories_add):
     book = load_workbook("diet_diary.xlsx")
     sheet = book.active
+    a = 2
+    target_row = get_global("target_row")
 
-    if sheet['B2'].value is None:
-        sheet['B2'].value = 0
+    if target_row == 0:
+        target_row = check_today_row(sheet, a)
 
-    sheet['B2'].value = sheet['B2'].value + calories_add
+    if target_row != 0:
+        if sheet.cell(target_row, 2).value is None:
+            sheet.cell(target_row, 2).value = 0
+        sheet.cell(target_row, 2).value += calories_add
+
     book.save("diet_diary.xlsx")
 
 
-def read_cell(cell):
+def read_cell(cell_row, cell_col):
     book = load_workbook("diet_diary.xlsx")
     sheet = book.active
-    return sheet[cell].value
+    return sheet.cell(cell_row, cell_col).value
 
 
 def delete_cell(cell):
@@ -46,17 +53,28 @@ def write_today_date_to_excel():
     book = load_workbook("diet_diary.xlsx")
     sheet = book.active
     a = 2
-    dateset = True
-    while dateset is True:
-        if sheet['A' + str(a)].value is None:
-            sheet['A' + str(a)] = datetime.date.today()
-            dateset = False
+
+    while True:
+        if sheet.cell(a, 1).value is None:
+            sheet.cell(a, 1).value = datetime.date.today()
+            break
         else:
             a += 1
+            if a > 100:
+                break
     book.save("diet_diary.xlsx")
 
 
-#excel_write_test(1)
-#reset()
-#excel_create()
-#write_today_date_to_excel()
+def check_today_row(sheet, a):
+    while True:
+        if sheet.cell(a, 1).value is not None and sheet.cell(a, 2).value is None:
+            update_global("target_row", a)
+            return a
+
+        elif sheet.cell(a, 1).value is None and sheet.cell(a, 2).value is None:
+            print("Todays date is not set. Please press Start of the day Button")
+            break
+        else:
+            a += 1
+            if a > 20:
+                break

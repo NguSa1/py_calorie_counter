@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QPushButton, QDialog, QLabel, QLineEdit
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
+from globals import get_global, update_global
+from excel import excel_write_test, read_cell, delete_cell, write_today_date_to_excel
 
-from excel import excel_write_test, read_cell, delete_cell
 # from PyQt5.QtGui import QIcon
 
 cell_var = "B2"
@@ -26,14 +27,13 @@ class CalorieTrackerGUI(QMainWindow):
 
         add_calories_button = QPushButton("Add calories")
         add_calories_button.clicked.connect(self.add_calories_button_clicked)
-        add_calories_button.clicked.connect(excel_write_test)
 
         self.calories_blank_line = QLineEdit()
 
         self.calories_left_label = QLabel("Calories left for Today: ")
 
-        self.reset_button = QPushButton("Reset Calories")
-        self.reset_button.clicked.connect(self.reset)
+        self.reset_button = QPushButton("Start of the day")
+        self.reset_button.clicked.connect(self.start_day)
 
         # grid; button placement
         row = 0
@@ -55,8 +55,13 @@ class CalorieTrackerGUI(QMainWindow):
         arg = int(self.calories_blank_line.text())
         excel_write_test(arg)
         self.calories_blank_line.clear()
-        self.calories_left_label.setText("Calories left for Today: " + str(calorie_goal - read_cell(cell_var)))
+        self.calories_left_label.setText("Calories left for Today: " +
+                                        str(calorie_goal - read_cell(get_global("target_row"), 2)))
 
-    def reset(self):
-        delete_cell(cell_var)
+
+
+    def start_day(self):
+        # delete_cell(cell_var)
         self.calories_left_label.setText("Calories left for Today: " + str(calorie_goal))
+        write_today_date_to_excel()
+        update_global("target_row", 0)
