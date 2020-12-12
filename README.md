@@ -1,5 +1,5 @@
 # py_calorie_counter
-Counts Calories, has a GUI, write to excel. In Progress
+Counts Calories, has a GUI, write to excel. In Progress.
 
 So far it can do the following:
 
