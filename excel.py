@@ -24,11 +24,11 @@ def excel_write_test(calories_add):
     sheet = book.active
     a = 2
     target_row = get_global("target_row")
-
     if target_row == 0:
         target_row = check_today_row(sheet, a)
-
-    if target_row != 0:
+    #if target_row != 0:
+    if target_row is not None:
+        print(target_row)
         if sheet.cell(target_row, 2).value is None:
             sheet.cell(target_row, 2).value = 0
         sheet.cell(target_row, 2).value += calories_add

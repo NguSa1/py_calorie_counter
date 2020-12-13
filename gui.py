@@ -1,12 +1,7 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QPushButton, QDialog, QLabel, QLineEdit
-from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QLineEdit
 from globals import get_global, update_global
-from excel import excel_write_test, read_cell, delete_cell, write_today_date_to_excel
+from excel import excel_write_test, read_cell, write_today_date_to_excel
 
-# from PyQt5.QtGui import QIcon
-
-cell_var = "B2"
 calorie_goal = 1600
 
 
@@ -15,9 +10,10 @@ class CalorieTrackerGUI(QMainWindow):
     def __init__(self):
         super(CalorieTrackerGUI, self).__init__()
 
+        # setting the widget
         win = QWidget(self)
         self.setCentralWidget(win)
-        self.setWindowTitle("Dinos Calorie-Tracker")
+        self.setWindowTitle("Calorie Tracker")
 
         # makes a grid layout and sets it to the widget
         grid = QGridLayout()
@@ -51,17 +47,15 @@ class CalorieTrackerGUI(QMainWindow):
         self.show()
 
     def add_calories_button_clicked(self):
-
-        arg = int(self.calories_blank_line.text())
-        excel_write_test(arg)
-        self.calories_blank_line.clear()
-        self.calories_left_label.setText("Calories left for Today: " +
-                                        str(calorie_goal - read_cell(get_global("target_row"), 2)))
-
-
+        if self.calories_blank_line.text() != '':
+            arg = int(self.calories_blank_line.text())
+            excel_write_test(arg)
+            self.calories_blank_line.clear()
+        if get_global("target_row") != 0:
+            self.calories_left_label.setText("Calories left for Today: " +
+                                             str(calorie_goal - read_cell(get_global("target_row"), 2)))
 
     def start_day(self):
-        # delete_cell(cell_var)
         self.calories_left_label.setText("Calories left for Today: " + str(calorie_goal))
         write_today_date_to_excel()
         update_global("target_row", 0)
