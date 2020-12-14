@@ -1,8 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QLineEdit
 from globals import get_global, update_global
 from excel import excel_write_test, read_cell, write_today_date_to_excel
-
-calorie_goal = 1600
+from json_writer import json_reset, json_load
 
 
 class CalorieTrackerGUI(QMainWindow):
@@ -33,7 +32,7 @@ class CalorieTrackerGUI(QMainWindow):
 
         # grid; button placement
         row = 0
-        grid.addWidget(QLabel("Calorie Goal: " + str(calorie_goal)), row, 0, 1, 1)
+        grid.addWidget(QLabel("Calorie Goal: " + str(get_global("calorie_goal"))), row, 0, 1, 1)
 
         row += 1
         grid.addWidget(self.calories_blank_line, row, 0, 1, 1)
@@ -51,11 +50,12 @@ class CalorieTrackerGUI(QMainWindow):
             arg = int(self.calories_blank_line.text())
             excel_write_test(arg)
             self.calories_blank_line.clear()
-        if get_global("target_row") != 0:
+        if json_load() != 0:
             self.calories_left_label.setText("Calories left for Today: " +
-                                             str(calorie_goal - read_cell(get_global("target_row"), 2)))
+                                             str(get_global("calorie_goal") - read_cell(json_load(), 2)))
 
     def start_day(self):
-        self.calories_left_label.setText("Calories left for Today: " + str(calorie_goal))
+        self.calories_left_label.setText("Calories left for Today: " + str(get_global("calorie_goal")))
         write_today_date_to_excel()
-        update_global("target_row", 0)
+        #update_global("target_row", 0)
+        json_reset()

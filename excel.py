@@ -1,6 +1,9 @@
+import json
+
 from openpyxl import Workbook, load_workbook
 import datetime
 from globals import update_global, get_global
+from json_writer import json_write, json_load
 
 
 def excel_exist():
@@ -23,15 +26,16 @@ def excel_write_test(calories_add):
     book = load_workbook("diet_diary.xlsx")
     sheet = book.active
     a = 2
-    target_row = get_global("target_row")
+    target_row = json_load()
+    # target_row = get_global("target_row")
     if target_row == 0:
         target_row = check_today_row(sheet, a)
-    #if target_row != 0:
+
     if target_row is not None:
-        print(target_row)
         if sheet.cell(target_row, 2).value is None:
             sheet.cell(target_row, 2).value = 0
         sheet.cell(target_row, 2).value += calories_add
+        sheet.cell(target_row, 3).value = sheet.cell(target_row, 2).value - get_global("calorie_goal")
 
     book.save("diet_diary.xlsx")
 
@@ -68,7 +72,13 @@ def write_today_date_to_excel():
 def check_today_row(sheet, a):
     while True:
         if sheet.cell(a, 1).value is not None and sheet.cell(a, 2).value is None:
-            update_global("target_row", a)
+            #update_global("target_row", a)
+            with open("target_row.json", "r") as read:
+                load_data = json.load(read)
+                with open("target_row.json", "w") as write:
+                    load_data["target_row"] = a
+                    json.dump(load_data, write, indent=4)
+                    write.close()
             return a
 
         elif sheet.cell(a, 1).value is None and sheet.cell(a, 2).value is None:
@@ -78,3 +88,4 @@ def check_today_row(sheet, a):
             a += 1
             if a > 20:
                 break
+

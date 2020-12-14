@@ -12,7 +12,8 @@ class GlobalsManager:
 
     def __init__(self):
         self.global_dict = dict()
-        self.global_dict.update({"target_row": 0})
+        self.global_dict.update({"target_row": 0,
+                                 "calorie_goal": 1600})
 
     def get_global(self, key):
         value = self.global_dict.get(key)
@@ -31,3 +32,5 @@ def get_global(key):
 
 def update_global(key, value):
     return GlobalsManager.get_manager().update_global(key, value)
+
+
