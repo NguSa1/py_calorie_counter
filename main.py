@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from gui import CalorieTrackerGUI
 from excel import excel_exist
-b = 0
 
 
 def main():

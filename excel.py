@@ -2,8 +2,8 @@ import json
 
 from openpyxl import Workbook, load_workbook
 import datetime
-from globals import update_global, get_global
-from json_writer import json_write, json_load
+from globals import get_global
+from json_writer import json_load
 
 
 def excel_exist():
@@ -72,7 +72,6 @@ def write_today_date_to_excel():
 def check_today_row(sheet, a):
     while True:
         if sheet.cell(a, 1).value is not None and sheet.cell(a, 2).value is None:
-            #update_global("target_row", a)
             with open("target_row.json", "r") as read:
                 load_data = json.load(read)
                 with open("target_row.json", "w") as write:
@@ -82,10 +81,19 @@ def check_today_row(sheet, a):
             return a
 
         elif sheet.cell(a, 1).value is None and sheet.cell(a, 2).value is None:
-            print("Todays date is not set. Please press Start of the day Button")
+            print("Today's date is not set. Please press Start of the day Button")
             break
         else:
             a += 1
             if a > 20:
                 break
 
+
+def write_weight(q_dialog_input):
+    book = load_workbook("diet_diary.xlsx")
+    sheet = book.active
+    if sheet.cell(json_load(), 4).value is None:
+        sheet.cell(json_load(), 4).value = q_dialog_input
+    else:
+        print("Wrong day setting or already noted the weight for today. If wrong day: press Start of the day first")
+    book.save("diet_diary.xlsx")
