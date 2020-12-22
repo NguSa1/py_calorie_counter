@@ -27,9 +27,8 @@ def excel_write_test(calories_add):
     sheet = book.active
     a = 2
     target_row = json_load()
-    # target_row = get_global("target_row")
-    if target_row == 0:
-        target_row = check_today_row(sheet, a)
+    # if target_row == 0:
+        # target_row = check_today_row(sheet, a)
 
     if target_row is not None:
         if sheet.cell(target_row, 2).value is None:
@@ -61,7 +60,15 @@ def write_today_date_to_excel():
     while True:
         if sheet.cell(a, 1).value is None:
             sheet.cell(a, 1).value = datetime.date.today()
-            break
+            if str(sheet.cell(a, 1).value.strftime("%d-%m-%Y")) == str(sheet.cell(a-1, 1).value.strftime("%d-%m-%Y")):
+                sheet.cell(a, 1).value = None
+                print("Pressed the Start Day button twice")
+                book.save("diet_diary.xlsx")
+                return False
+            else:
+                print("test")
+                book.save("diet_diary.xlsx")
+                return True
         else:
             a += 1
             if a > 100:
@@ -81,7 +88,7 @@ def check_today_row(sheet, a):
             return a
 
         elif sheet.cell(a, 1).value is None and sheet.cell(a, 2).value is None:
-            print("Today's date is not set. Please press Start of the day Button")
+            # print("Today's date is not set. Please press Start of the day Button")
             break
         else:
             a += 1
@@ -97,3 +104,14 @@ def write_weight(q_dialog_input):
     else:
         print("Wrong day setting or already noted the weight for today. If wrong day: press Start of the day first")
     book.save("diet_diary.xlsx")
+
+
+def test():
+    book = load_workbook("diet_diary.xlsx")
+    sheet = book.active
+    a = 8
+    if sheet.cell(a-3, 1).value == sheet.cell(a+9, 1).value:
+        print("true")
+
+    book.save("diet_diary.xlsx")
+
