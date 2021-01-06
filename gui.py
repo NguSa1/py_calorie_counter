@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QPushButton, QLab
 from openpyxl import load_workbook
 
 from globals import get_global
-from excel import excel_write_test, read_cell, write_today_date_to_excel, write_weight, check_today_row
-from json_writer import json_reset, json_load
+from excel import read_cell, write_today_date_to_excel, write_weight, check_today_row, excel_write
+from json_writer import json_load
 
 
 class CalorieTrackerGUI(QMainWindow):
@@ -25,9 +25,13 @@ class CalorieTrackerGUI(QMainWindow):
         add_calories_button.clicked.connect(self.add_calories_button_clicked)
 
         self.calories_blank_line = QLineEdit()
-
-        self.calories_left_label = QLabel("Calories left for Today: " +
+        # cant run the program if no calories were added after i started day and closed it, fix inc
+        if read_cell(json_load(), 2) is not None:
+            self.calories_left_label = QLabel("Calories left for Today: " +
                                           str(get_global("calorie_goal") - read_cell(json_load(), 2)))
+        else:
+            self.calories_left_label = QLabel("Calories left for Today: " +
+                                              str(get_global("calorie_goal")))
 
         reset_button = QPushButton("Start of the day")
         reset_button.clicked.connect(self.start_day)
@@ -60,8 +64,8 @@ class CalorieTrackerGUI(QMainWindow):
 
     def add_calories_button_clicked(self):
         if self.calories_blank_line.text() != '':
-            arg = int(self.calories_blank_line.text())
-            excel_write_test(arg)
+            calories_add = int(self.calories_blank_line.text())
+            excel_write(calories_add)
             self.calories_blank_line.clear()
         if json_load() != 0:
             self.calories_left_label.setText("Calories left for Today: " +

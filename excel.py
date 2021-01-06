@@ -22,7 +22,7 @@ def excel_exist():
         print("Excel File exists.")
 
 
-def excel_write_test(calories_add):
+def excel_write(calories_add):
     book = load_workbook("diet_diary.xlsx")
     sheet = book.active
     a = 2
@@ -66,7 +66,6 @@ def write_today_date_to_excel():
                 book.save("diet_diary.xlsx")
                 return False
             else:
-                print("test")
                 book.save("diet_diary.xlsx")
                 return True
         else:
@@ -92,7 +91,7 @@ def check_today_row(sheet, a):
             break
         else:
             a += 1
-            if a > 20:
+            if a > 100:
                 break
 
 
