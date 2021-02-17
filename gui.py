@@ -25,10 +25,10 @@ class CalorieTrackerGUI(QMainWindow):
         add_calories_button.clicked.connect(self.add_calories_button_clicked)
 
         self.calories_blank_line = QLineEdit()
-        # cant run the program if no calories were added after i started day and closed it, fix inc
+
         if read_cell(json_load(), 2) is not None:
             self.calories_left_label = QLabel("Calories left for Today: " +
-                                          str(get_global("calorie_goal") - read_cell(json_load(), 2)))
+                                              str(get_global("calorie_goal") - read_cell(json_load(), 2)))
         else:
             self.calories_left_label = QLabel("Calories left for Today: " +
                                               str(get_global("calorie_goal")))

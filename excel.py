@@ -25,10 +25,7 @@ def excel_exist():
 def excel_write(calories_add):
     book = load_workbook("diet_diary.xlsx")
     sheet = book.active
-    a = 2
     target_row = json_load()
-    # if target_row == 0:
-        # target_row = check_today_row(sheet, a)
 
     if target_row is not None:
         if sheet.cell(target_row, 2).value is None:
@@ -113,4 +110,3 @@ def test():
         print("true")
 
     book.save("diet_diary.xlsx")
-
